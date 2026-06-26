@@ -1,0 +1,361 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{parskip}
+
+\definecolor{truegreen}{RGB}{39, 80, 10}
+\definecolor{falsered}{RGB}{121, 31, 31}
+\definecolor{darkblue}{RGB}{10, 40, 120}
+
+\newcommand{\T}{\textcolor{truegreen}{\textbf{[TRUE]}}}
+\newcommand{\F}{\textcolor{falsered}{\textbf{[FALSE]}}}
+\newcommand{\expl}[1]{\textcolor{darkblue}{\small #1}}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Multivariate Normal Distribution (MVN)}}\\[0.3em]
+  {\large Exam Questions --- Answers \& Explanations}
+\end{center}
+\vspace{1em}
+
+\textbf{Key rules to memorise:}
+\begin{itemize}[itemsep=4pt]
+  \item \textbf{Linear transformations of a MVN are always MVN.} There are no exceptions.
+  \item \textbf{Marginals of a MVN are univariate normal.} But the converse is false: normal marginals do \textit{not} imply a joint MVN.
+  \item \textbf{MVN is characterised by every linear combination being normal.} If \textit{all} linear combinations $\mathbf{a}^\top \mathbf{X}$ are univariate normal, then $\mathbf{X}$ is MVN.
+  \item \textbf{For jointly Gaussian variables: uncorrelated $\Leftrightarrow$ independent.} This equivalence does \textit{not} hold in general.
+  \item \textbf{In general: uncorrelated $\not\Rightarrow$ independent}, and \textbf{dependent $\not\Rightarrow$ correlated} (nonlinear dependence can exist with zero correlation).
+  \item The covariance matrix $\boldsymbol{\Sigma}$ is \textbf{positive semi-definite}, so $\det(\boldsymbol{\Sigma}) \geq 0$.
+  \item A MVN is \textbf{fully characterised by $\boldsymbol{\mu}$ and $\boldsymbol{\Sigma}$} alone.
+  \item \textbf{Squared Mahalanobis distance} $(\mathbf{X}_i - \boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1} (\mathbf{X}_i - \boldsymbol{\mu}) \sim \chi^2(p)$.
+  \item \textbf{Wishart distribution} is the multivariate generalisation of the chi-square. It is additive (reproductive) and reduces to a scaled $\chi^2$ when $p=1$.
+\end{itemize}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q1. Suppose $\mathbf{X}$ follows a MVN with covariance matrix $\boldsymbol{\Sigma}$. Which statements are correct?}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \F\ In some cases, it is possible to find a linear transformation of $\mathbf{X}$ that does not result in another MVN.
+  \item \T\ If $\mathbf{X}$ is normally distributed, all of its marginal distributions are also normal.
+  \item \T\ If the components of $\mathbf{X}$ are uncorrelated, then they are independent.
+  \item \T\ The determinant of $\boldsymbol{\Sigma}$ is greater than or equal to zero.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} False. Any linear transformation $\mathbf{A}\mathbf{X} + \mathbf{b}$ of a MVN is always MVN. This is one of the defining closure properties; there are no exceptions.\\
+\textbf{(2)} True. Each individual component $X_i \sim \mathcal{N}(\mu_i, \sigma_i^2)$. Marginals of a MVN are always univariate normal.\\
+\textbf{(3)} True --- but \textit{only because} $\mathbf{X}$ is jointly Gaussian. Zero covariance (uncorrelatedness) implies independence when the joint distribution is Gaussian. This does not hold in general.\\
+\textbf{(4)} True. $\boldsymbol{\Sigma}$ is positive semi-definite by definition, so all eigenvalues are $\geq 0$, which implies $\det(\boldsymbol{\Sigma}) \geq 0$.
+}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q2. Let $\mathbf{X}$ be a random vector with values in $\mathbb{R}^p$. Indicate the true statements:}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \T\ If $\mathbf{X}$ is multivariate Gaussian, the marginal distributions of $\mathbf{X}$ are univariate Gaussian.
+  \item \T\ If $\mathbf{X}$ is multivariate Gaussian, any linear combination of the coordinates of $\mathbf{X}$ is univariate Gaussian.
+  \item \F\ $\mathbf{X}$ is multivariate Gaussian if and only if the marginal distributions of $\mathbf{X}$ are univariate Gaussian.
+  \item \F\ If one can find a linear combination of the coordinates of $\mathbf{X}$ that is univariate Gaussian, then $\mathbf{X}$ is multivariate Gaussian.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} True. Projecting a MVN onto any coordinate axis yields a univariate normal.\\
+\textbf{(2)} True. This is actually a standard \textit{definition} of the MVN: $\mathbf{X}$ is MVN if and only if \textit{every} linear combination $\mathbf{a}^\top \mathbf{X}$ is univariate normal.\\
+\textbf{(3)} False. Normal marginals do \textit{not} guarantee a MVN joint distribution. A classic counterexample: one can construct $(X, Y)$ where $X$ and $Y$ are each marginally normal, but $(X, Y)$ is not jointly normal.\\
+\textbf{(4)} False. Finding \textit{one} linear combination that happens to be Gaussian is not sufficient. \textit{All} linear combinations must be Gaussian for $\mathbf{X}$ to be MVN.
+}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q3. Indicate the true statements about uncorrelatedness and independence:}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \T\ Two random variables whose joint distribution is Gaussian are independent if and only if they are uncorrelated.
+  \item \T\ If two random variables whose joint distribution is Gaussian are uncorrelated, then they are independent.
+  \item \F\ If two random variables are uncorrelated, then they are independent.
+  \item \F\ If two random variables are dependent, then they are correlated.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} True. For jointly Gaussian variables, uncorrelated $\Leftrightarrow$ independent. Both directions hold.\\
+\textbf{(2)} True. This is the key special property of the Gaussian: $\mathrm{Cov}(X, Y) = 0$ implies independence, given that the joint distribution is Gaussian.\\
+\textbf{(3)} False in general. Uncorrelated means only zero \textit{linear} correlation. Nonlinear dependence can still exist. The Gaussian case is a special exception.\\
+\textbf{(4)} False. Dependence does not imply correlation. Classic example: let $X \sim \mathcal{N}(0,1)$ and $Y = X^2$. Then $Y$ is completely determined by $X$ (dependent), yet $\mathrm{Cov}(X, Y) = 0$ (uncorrelated).
+}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q4. Let $\mathbf{X}$ be a $p$-dimensional random vector following a MVN. Which statements are true?}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \T\ If all pairwise correlations between the components of $\mathbf{X}$ are zero, they are independent.
+  \item \T\ Any linear combination of the components of $\mathbf{X}$ is normally distributed.
+  \item \T\ The marginal distributions of $\mathbf{X}$ are univariate normal.
+  \item \T\ The joint distribution of $\mathbf{X}$ is completely characterised by its mean vector and covariance matrix.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} True. Zero pairwise correlations means all off-diagonal entries of $\boldsymbol{\Sigma}$ are zero, so $\boldsymbol{\Sigma}$ is diagonal. For a MVN, a diagonal covariance matrix implies full independence.\\
+\textbf{(2)} True. For any $\mathbf{a} \in \mathbb{R}^p$: $\mathbf{a}^\top \mathbf{X} \sim \mathcal{N}(\mathbf{a}^\top \boldsymbol{\mu},\; \mathbf{a}^\top \boldsymbol{\Sigma}\, \mathbf{a})$.\\
+\textbf{(3)} True. Each $X_i \sim \mathcal{N}(\mu_i, \sigma_i^2)$. Marginals of a MVN are always univariate normal.\\
+\textbf{(4)} True. The MVN is fully determined by its mean vector $\boldsymbol{\mu}$ and covariance matrix $\boldsymbol{\Sigma}$. No additional parameters are needed.
+}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q5. Let $\mathbf{X}_1, \ldots, \mathbf{X}_n$ be iid from a $p$-dimensional MVN. Which statements are correct?}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \T\ The squared Mahalanobis distances of the observations from the true mean follow a chi-square distribution.
+  \item \F\ If $n > p$, then the sample covariance matrix is certainly singular.
+  \item \F\ The total variance of the sample is the product of the squared Euclidean distances from each observation to the sample mean.
+  \item \T\ The squared Mahalanobis distance of the sample mean from the true mean follows a chi-square distribution.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} True. $(\mathbf{X}_i - \boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1} (\mathbf{X}_i - \boldsymbol{\mu}) \sim \chi^2(p)$. This follows directly from standardising a MVN.\\
+\textbf{(2)} False --- it is the \textit{opposite}. When $n > p$, the sample covariance matrix is almost surely \textit{non-singular} (full rank). Singularity is guaranteed when $n \leq p$, because there are too few observations to span $\mathbb{R}^p$.\\
+\textbf{(3)} False. Total variance $= \mathrm{tr}(\mathbf{S}) = \sum_{j=1}^p s_j^2$, which is a \textit{sum}. The product of eigenvalues gives the determinant (generalised variance), which is a completely different quantity.\\
+\textbf{(4)} True. Since $\bar{\mathbf{X}} \sim \mathcal{N}(\boldsymbol{\mu},\, \boldsymbol{\Sigma}/n)$, it follows that $n(\bar{\mathbf{X}} - \boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1} (\bar{\mathbf{X}} - \boldsymbol{\mu}) \sim \chi^2(p)$.
+}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q6. Let $\mathbf{X}_1, \ldots, \mathbf{X}_n$ be iid from a $p$-dimensional MVN with $n > p$. Which statements about the Wishart distribution are true?}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \F\ The sample covariance matrix follows a Wishart distribution.
+  \item \T\ If $p = 1$, the Wishart distribution is equivalent to a scaled chi-square distribution.
+  \item \F\ The Wishart distribution is always defined, even when the covariance matrix is singular.
+  \item \T\ The sum of two independent random matrices, each with a Wishart distribution with the same covariance matrix as parameter, has a Wishart distribution.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} False --- not quite. It is the \textit{scatter matrix} $(n-1)\mathbf{S} = \sum_{i=1}^n (\mathbf{X}_i - \bar{\mathbf{X}})(\mathbf{X}_i - \bar{\mathbf{X}})^\top$ that follows $\mathcal{W}_p(n-1,\, \boldsymbol{\Sigma})$. The sample covariance $\mathbf{S}$ itself is a scaled Wishart, not a Wishart directly.\\
+\textbf{(2)} True. When $p = 1$: $\mathcal{W}_1(k, \sigma^2) \equiv \sigma^2 \chi^2(k)$. The Wishart generalises the chi-square distribution to multiple dimensions.\\
+\textbf{(3)} False. The standard Wishart distribution requires $\boldsymbol{\Sigma}$ to be positive \textit{definite} (non-singular). Generalisations exist for singular cases, but the standard definition excludes them.\\
+\textbf{(4)} True. This is the \textit{reproductive (additive) property} of the Wishart: if $\mathbf{A} \sim \mathcal{W}_p(m, \boldsymbol{\Sigma})$ and $\mathbf{B} \sim \mathcal{W}_p(n, \boldsymbol{\Sigma})$ independently, then $\mathbf{A} + \mathbf{B} \sim \mathcal{W}_p(m+n, \boldsymbol{\Sigma})$.
+}
+
+
+%%% -----------------------------------------------------------------------
+%%% Bu bloğu mvn_exam_notes.tex dosyasının \end{document} satırından
+%%% ÖNCE yapıştırın.
+%%% -----------------------------------------------------------------------
+
+\vspace{2em}
+\begin{center}
+  {\large \textbf{Additional Questions --- Lecture 7 \& 8 Material}}
+\end{center}
+\vspace{0.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q7. Suppose $\mathbf{x} \sim N_p(\boldsymbol{\mu}, \boldsymbol{\Sigma})$. Which statements about the density and geometry are correct?}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \T\ The level sets of the density $f_{\mathbf{x}}$ are ellipsoids centred at $\boldsymbol{\mu}$.
+  \item \T\ The eigenvectors of $\boldsymbol{\Sigma}$ give the axes of these ellipsoids.
+  \item \F\ If $\boldsymbol{\Sigma} = \mathbf{I}$, the level sets are ellipsoids with unequal axes.
+  \item \T\ Larger eigenvalues $\lambda_i$ correspond to directions along which the ellipsoid is more stretched.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} True. $f_{\mathbf{x}}(\mathbf{t}) = c \Leftrightarrow (\mathbf{t} - \boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1}(\mathbf{t} - \boldsymbol{\mu}) = \text{const}$, which defines an ellipsoid centred at $\boldsymbol{\mu}$.\\
+\textbf{(2)} True. The spectral decomposition $\boldsymbol{\Sigma} = \sum_i \lambda_i \mathbf{e}_i \mathbf{e}_i^\top$ shows the eigenvectors $\mathbf{e}_i$ are the principal axes and $\sqrt{\lambda_i}$ are the half-lengths.\\
+\textbf{(3)} False. When $\boldsymbol{\Sigma} = \mathbf{I}$, all eigenvalues equal 1 and all directions are equally scaled, so the level sets are perfect \textit{spheres}, not stretched ellipsoids.\\
+\textbf{(4)} True. A large $\lambda_i$ means high variance in direction $\mathbf{e}_i$, which corresponds to greater spread — and therefore greater half-length $\sqrt{\lambda_i}$ — along that axis.
+}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q8. Let $\mathbf{x} \sim N_p(\boldsymbol{\mu}, \boldsymbol{\Sigma})$ with block partition $\mathbf{x} = (\mathbf{x}_1^\top, \mathbf{x}_2^\top)^\top$. Which statements are correct?}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \T\ The marginal distribution of $\mathbf{x}_1$ is $N_q(\boldsymbol{\mu}_1, \boldsymbol{\Sigma}_{11})$.
+  \item \T\ If $\boldsymbol{\Sigma}_{12} = \mathbf{0}$, then $\mathbf{x}_1$ and $\mathbf{x}_2$ are independent.
+  \item \F\ If $\boldsymbol{\Sigma}_{12} = \mathbf{0}$, then $\mathbf{x}_1$ and $\mathbf{x}_2$ are uncorrelated but not necessarily independent.
+  \item \T\ The conditional covariance $\mathrm{Cov}(\mathbf{x}_1 \mid \mathbf{X}_2 = \mathbf{x}_2) = \boldsymbol{\Sigma}_{11} - \boldsymbol{\Sigma}_{12}\boldsymbol{\Sigma}_{22}^{-1}\boldsymbol{\Sigma}_{21}$ does not depend on the observed value $\mathbf{x}_2$.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} True. Apply $A = [I_q \mid \mathbf{0}]$; then $A\mathbf{x} = \mathbf{x}_1$ and $A\boldsymbol{\Sigma} A^\top = \boldsymbol{\Sigma}_{11}$.\\
+\textbf{(2)} True. This is the special Gaussian property: for jointly Gaussian blocks, zero cross-covariance ($\boldsymbol{\Sigma}_{12} = \mathbf{0}$) implies full statistical independence (the joint density factors).\\
+\textbf{(3)} False. For jointly Gaussian variables the two statements are equivalent: $\boldsymbol{\Sigma}_{12} = \mathbf{0} \Leftrightarrow \mathbf{x}_1 \perp\!\!\!\perp \mathbf{x}_2$. The distinction between uncorrelated and independent only matters outside the Gaussian setting.\\
+\textbf{(4)} True. The Schur complement $\boldsymbol{\Sigma}_{11} - \boldsymbol{\Sigma}_{12}\boldsymbol{\Sigma}_{22}^{-1}\boldsymbol{\Sigma}_{21}$ is a fixed matrix — it depends on the population parameters, not on the specific realisation $\mathbf{x}_2$. Only the conditional \textit{mean} shifts with $\mathbf{x}_2$.
+}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q9. Let $(Y, X)^\top \sim N_2$ with correlation $\rho = \mathrm{corr}(X, Y)$. Which statements are true?}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \T\ The conditional mean $\mathbb{E}[Y \mid X = x]$ is a linear function of $x$.
+  \item \T\ In standardized coordinates, the regression line has slope exactly $\rho$.
+  \item \F\ If $\rho = 0.8$, then an extremely high $X$ value predicts an equally extreme $Y$ value on average.
+  \item \T\ The regression fallacy consists of giving a causal explanation to a purely mathematical phenomenon.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} True. From the conditional theorem: $\mathbb{E}[Y \mid X = x] = \mu_Y + \frac{\sigma_{XY}}{\sigma_{XX}}(x - \mu_X)$, which is linear in $x$.\\
+\textbf{(2)} True. In standardized coordinates $y_{\mathrm{std}} = \rho \cdot x_{\mathrm{std}}$. The slope is exactly $\rho$.\\
+\textbf{(3)} False. Because $|\rho| \leq 1$, the regression line is always \textit{flatter} than the 45° line. Even with $\rho = 0.8$, an extreme $X$ predicts a $Y$ that is closer to its mean (in standard deviation units) than $X$ is to its own mean. This is regression toward the mean.\\
+\textbf{(4)} True. Regression toward the mean is a mathematical inevitability from $|\rho| \leq 1$. Interpreting it as evidence of a biological, economic, or causal mechanism is the fallacy. Galton's tall-fathers observation and the cited economics Nobel mistakes are canonical examples.
+}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q10. Let $X_1, \ldots, X_n \overset{\mathrm{iid}}{\sim} N_p(\boldsymbol{\mu}, \boldsymbol{\Sigma})$. Which statements about the MLE are correct?}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \T\ The MLE of $\boldsymbol{\mu}$ is the sample mean $\bar{\mathbf{X}}$, which is unbiased.
+  \item \F\ The MLE of $\boldsymbol{\Sigma}$ is the sample covariance matrix $\mathbf{S}$ (dividing by $n-1$), which is unbiased.
+  \item \T\ The MLE of $\boldsymbol{\Sigma}$ divides by $n$, not $n-1$, and is therefore biased.
+  \item \T\ By the invariance property of the MLE, the MLE of $\det(\boldsymbol{\Sigma})$ is $\det(\hat{\boldsymbol{\Sigma}})$.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} True. $\hat{\boldsymbol{\mu}} = \bar{\mathbf{X}} = \frac{1}{n}\sum X_i$ and $\mathbb{E}[\bar{\mathbf{X}}] = \boldsymbol{\mu}$.\\
+\textbf{(2)} False. The MLE of $\boldsymbol{\Sigma}$ divides by $n$: $\hat{\boldsymbol{\Sigma}} = \frac{1}{n}\sum (X_i - \bar{\mathbf{X}})(X_i - \bar{\mathbf{X}})^\top = \frac{n-1}{n}\mathbf{S}$. This is biased: $\mathbb{E}[\hat{\boldsymbol{\Sigma}}] = \frac{n-1}{n}\boldsymbol{\Sigma} \neq \boldsymbol{\Sigma}$. The unbiased estimator $\mathbf{S}$ is \textit{not} the MLE.\\
+\textbf{(3)} True. Bessel's correction ($n-1$ denominator) corrects for the fact that deviations $(X_i - \bar{\mathbf{X}})$ are constrained to sum to zero, making them systematically smaller. The MLE ignores this correction and is therefore biased downward.\\
+\textbf{(4)} True. The invariance property states: if $\hat{\theta}$ is the MLE of $\theta$, then $h(\hat{\theta})$ is the MLE of $h(\theta)$ for any function $h$. No re-derivation is needed — just apply $h = \det(\cdot)$ to $\hat{\boldsymbol{\Sigma}}$.
+}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q11. Let $X_1, \ldots, X_n \overset{\mathrm{iid}}{\sim} N_p(\boldsymbol{\mu}, \boldsymbol{\Sigma})$ with $n > p$. Which statements about the distribution of $\bar{\mathbf{X}}$ and $\mathbf{S}$ are true?}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \T\ $\bar{\mathbf{X}} \sim N_p\!\left(\boldsymbol{\mu},\, \frac{1}{n}\boldsymbol{\Sigma}\right)$ exactly for any $n \geq 1$.
+  \item \T\ $\bar{\mathbf{X}}$ and $\mathbf{S}$ are independent.
+  \item \F\ $(n-1)\mathbf{S} \sim W_p(n, \boldsymbol{\Sigma})$, i.e., with $n$ degrees of freedom.
+  \item \T\ $n(\bar{\mathbf{X}} - \boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1}(\bar{\mathbf{X}} - \boldsymbol{\mu}) \sim \chi^2(p)$.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} True. The Gaussian is closed under sums and scalar multiplication. The result is exact (not an approximation) for all $n \geq 1$.\\
+\textbf{(2)} True. This is one of the most important structural facts in multivariate statistics. For Gaussian data, the location of the centre ($\bar{\mathbf{X}}$) carries no information about the spread ($\mathbf{S}$) and vice versa. This independence is what makes Hotelling's $T^2$ test possible.\\
+\textbf{(3)} False. The degrees of freedom are $n-1$, not $n$. The constraint $\sum(X_i - \bar{\mathbf{X}}) = \mathbf{0}$ removes one degree of freedom. The correct result is $(n-1)\mathbf{S} \sim W_p(n-1, \boldsymbol{\Sigma})$.\\
+\textbf{(4)} True. Since $\bar{\mathbf{X}} \sim N_p(\boldsymbol{\mu}, \boldsymbol{\Sigma}/n)$, standardizing gives $\sqrt{n}\,\boldsymbol{\Sigma}^{-1/2}(\bar{\mathbf{X}} - \boldsymbol{\mu}) \sim N_p(\mathbf{0}, \mathbf{I})$, and the squared norm of a standard $p$-variate normal is $\chi^2(p)$.
+}
+
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Q12. Which of the following statements about the Law of Large Numbers (LLN) and the Central Limit Theorem (CLT) are correct?}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \T\ The LLN holds for any distribution with finite mean and covariance --- Gaussianity is not required.
+  \item \F\ The CLT states that $\bar{\mathbf{X}}_n - \boldsymbol{\mu}$ converges in distribution to $N_p(\mathbf{0}, \boldsymbol{\Sigma})$.
+  \item \T\ The typical magnitude of the estimation error satisfies $\|\bar{\mathbf{X}}_n - \boldsymbol{\mu}\| \sim C/\sqrt{n}$, so halving the error requires four times as much data.
+  \item \F\ For large $n$, the sample covariance $\mathbf{S}$ follows an approximate Wishart distribution regardless of the underlying distribution of the data.
+\end{enumerate}
+
+\expl{
+\textbf{(1)} True. Both the weak and strong LLN require only that the data is iid with finite mean (and finite covariance for the multivariate case). The distribution can be Bernoulli, Poisson, uniform — anything.\\
+\textbf{(2)} False. $\bar{\mathbf{X}}_n - \boldsymbol{\mu} \to \mathbf{0}$, so its distribution collapses to a point mass. The correct statement is that the \textit{rescaled} error $\sqrt{n}(\bar{\mathbf{X}}_n - \boldsymbol{\mu}) \xrightarrow{d} N_p(\mathbf{0}, \boldsymbol{\Sigma})$. The $\sqrt{n}$ factor is essential --- it zooms in at exactly the right rate.\\
+\textbf{(3)} True. Since $\mathrm{Var}(\bar{\mathbf{X}}_n) = \boldsymbol{\Sigma}/n$, the standard deviation shrinks at rate $1/\sqrt{n}$. This is the fundamental law of statistical estimation: cutting the error by a factor of $k$ requires $k^2$ times the data.\\
+\textbf{(4)} False. The Wishart distribution of $(n-1)\mathbf{S}$ is an \textit{exact} result that requires Gaussian data. For non-Gaussian data, no simple closed-form distribution for $\mathbf{S}$ is available, even asymptotically. What the CLT guarantees is only the approximate normality of $\bar{\mathbf{X}}_n$, not any distributional result for $\mathbf{S}$.
+}
+
+\vspace{2em}
+\hrule
+\vspace{1.5em}
+
+% -----------------------------------------------------------------------
+\section*{Exam Reference Sheet --- Key Facts to Memorise}
+
+\subsection*{MVN: Core Properties}
+\begin{itemize}[itemsep=5pt]
+  \item \textbf{Closure under linear maps.} $\mathbf{x} \sim N_p(\boldsymbol{\mu}, \boldsymbol{\Sigma})$ and $A$ a $q \times p$ matrix $\Rightarrow A\mathbf{x} \sim N_q(A\boldsymbol{\mu},\, A\boldsymbol{\Sigma} A^\top)$. No exceptions.
+  \item \textbf{Characterisation theorem.} $\mathbf{x} \sim N_p \Leftrightarrow \mathbf{a}^\top \mathbf{x} \sim N_1$ for \textit{every} $\mathbf{a} \in \mathbb{R}^p$. This is both the definition and the main proof tool.
+  \item \textbf{Normal marginals $\not\Rightarrow$ joint normal.} The $\Leftarrow$ direction fails. You can construct distributions with all Gaussian marginals that are not jointly Gaussian.
+  \item \textbf{Gaussian special property.} For jointly Gaussian variables: uncorrelated $\Leftrightarrow$ independent ($\boldsymbol{\Sigma}_{12} = \mathbf{0} \Leftrightarrow \mathbf{x}_1 \perp\!\!\!\perp \mathbf{x}_2$). This equivalence does \textbf{not} hold in general.
+  \item \textbf{Covariance matrix.} $\boldsymbol{\Sigma}$ is positive semi-definite $\Rightarrow$ all eigenvalues $\geq 0 \Rightarrow \det(\boldsymbol{\Sigma}) \geq 0$.
+  \item \textbf{Full characterisation.} A MVN is completely determined by $\boldsymbol{\mu}$ and $\boldsymbol{\Sigma}$ alone.
+\end{itemize}
+
+\subsection*{Mahalanobis Distance and Confidence Ellipsoids}
+\begin{itemize}[itemsep=5pt]
+  \item \textbf{Squared Mahalanobis distance.} $W = (\mathbf{x} - \boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1} (\mathbf{x} - \boldsymbol{\mu}) \sim \chi^2(p)$.
+  \item \textbf{Proof strategy.} Let $\mathbf{z} = \boldsymbol{\Sigma}^{-1/2}(\mathbf{x}-\boldsymbol{\mu}) \sim N_p(\mathbf{0}, \mathbf{I})$; then $W = \mathbf{z}^\top\mathbf{z} = \sum z_i^2 \sim \chi^2(p)$.
+  \item \textbf{Confidence ellipsoid.} $P\!\left[(\mathbf{x}-\boldsymbol{\mu})^\top\boldsymbol{\Sigma}^{-1}(\mathbf{x}-\boldsymbol{\mu}) \leq \chi^2_{1-\alpha}(p)\right] = 1 - \alpha$. The inverse problem: after observing $\mathbf{x}$, the ellipsoid centred at $\mathbf{x}$ covers the unknown $\boldsymbol{\mu}$ with probability $1-\alpha$.
+  \item \textbf{Sample mean version.} $n(\bar{\mathbf{X}} - \boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1}(\bar{\mathbf{X}} - \boldsymbol{\mu}) \sim \chi^2(p)$ exactly (for Gaussian data).
+\end{itemize}
+
+\subsection*{Conditional Distribution}
+\begin{itemize}[itemsep=5pt]
+  \item $\mathbf{x}_1 \mid \mathbf{X}_2 = \mathbf{x}_2 \sim N_q\!\left(\boldsymbol{\mu}_1 + \boldsymbol{\Sigma}_{12}\boldsymbol{\Sigma}_{22}^{-1}(\mathbf{x}_2 - \boldsymbol{\mu}_2),\; \boldsymbol{\Sigma}_{11} - \boldsymbol{\Sigma}_{12}\boldsymbol{\Sigma}_{22}^{-1}\boldsymbol{\Sigma}_{21}\right)$.
+  \item \textbf{Conditional mean} shifts linearly with $\mathbf{x}_2$; \textbf{conditional covariance} (Schur complement) is fixed --- it does \textit{not} depend on the observed value $\mathbf{x}_2$.
+  \item Observing $\mathbf{x}_2$ \textbf{never increases} uncertainty: $\boldsymbol{\Sigma}_{11} - \boldsymbol{\Sigma}_{12}\boldsymbol{\Sigma}_{22}^{-1}\boldsymbol{\Sigma}_{21} \leq \boldsymbol{\Sigma}_{11}$.
+  \item \textbf{Regression line (bivariate).} $\mathbb{E}[Y \mid X = x] = \mu_Y + \rho\frac{\sqrt{\sigma_{YY}}}{\sqrt{\sigma_{XX}}}(x - \mu_X)$. In standardised coordinates: slope $= \rho$.
+  \item \textbf{Regression fallacy.} Because $|\rho| \leq 1$, extreme $X$ predicts a less extreme $Y$ (in SD units). This is mathematical, \textbf{not causal}.
+\end{itemize}
+
+\subsection*{MLE for the Gaussian}
+\begin{itemize}[itemsep=5pt]
+  \item $\hat{\boldsymbol{\mu}} = \bar{\mathbf{X}}$ (MLE and unbiased). \quad $\hat{\boldsymbol{\Sigma}} = \frac{1}{n}\sum(X_i - \bar{\mathbf{X}})(X_i-\bar{\mathbf{X}})^\top = \frac{n-1}{n}\mathbf{S}$ (MLE, \textbf{biased}).
+  \item $\mathbf{S} = \frac{1}{n-1}\sum(X_i-\bar{\mathbf{X}})(X_i-\bar{\mathbf{X}})^\top$ is \textbf{unbiased} but \textbf{not} the MLE.
+  \item \textbf{Invariance property.} The MLE of $h(\theta)$ is $h(\hat{\theta})$. Never re-derive --- apply the function directly to $\hat{\boldsymbol{\Sigma}}$.
+  \item \textbf{Why biased?} $\sum(X_i - \bar{\mathbf{X}}) = \mathbf{0}$ always (one constraint) $\Rightarrow$ one degree of freedom lost $\Rightarrow$ deviations systematically underestimated.
+\end{itemize}
+
+\subsection*{Wishart Distribution}
+\begin{itemize}[itemsep=5pt]
+  \item \textbf{Definition.} $W = \sum_{j=1}^m Z_j Z_j^\top$, $Z_j \overset{\mathrm{iid}}{\sim} N_p(\mathbf{0}, \boldsymbol{\Sigma})$ $\Rightarrow$ $W \sim W_p(m, \boldsymbol{\Sigma})$. Slogan: \textbf{Wishart is the matrix $\chi^2$}.
+  \item \textbf{Connection to $\mathbf{S}$.} $(n-1)\mathbf{S} \sim W_p(n-1, \boldsymbol{\Sigma})$, \textbf{not} $n$ d.f. Degrees of freedom $= n-1$ because $\sum(X_i - \bar{\mathbf{X}}) = \mathbf{0}$ removes one.
+  \item \textbf{$p = 1$ special case.} $W_1(m, \sigma^2) = \sigma^2 \chi^2_m$. The chi-squared is a special case of the Wishart.
+  \item \textbf{Independence.} $\bar{\mathbf{X}}$ and $\mathbf{S}$ are independent (for Gaussian data). This is what makes Hotelling's $T^2$ test possible.
+  \item \textbf{Expected value.} $\mathbb{E}[W] = m\boldsymbol{\Sigma}$ $\Rightarrow$ $\mathbb{E}[\mathbf{S}] = \boldsymbol{\Sigma}$ (unbiased), $\mathbb{E}[\hat{\boldsymbol{\Sigma}}] = \frac{n-1}{n}\boldsymbol{\Sigma}$ (biased).
+  \item \textbf{Additivity.} $W_1 \sim W_p(m_1, \boldsymbol{\Sigma})$, $W_2 \sim W_p(m_2, \boldsymbol{\Sigma})$ independent $\Rightarrow$ $W_1 + W_2 \sim W_p(m_1 + m_2, \boldsymbol{\Sigma})$.
+  \item \textbf{Positive definiteness.} $W \sim W_p(m, \boldsymbol{\Sigma})$ is almost surely positive definite $\Leftrightarrow m \geq p$. If $n \leq p$: $\mathbf{S}$ is singular, $\mathbf{S}^{-1}$ does not exist, standard tests fail.
+  \item \textbf{Scalar projection.} $\mathbf{a}^\top W \mathbf{a} \sim (\mathbf{a}^\top \boldsymbol{\Sigma} \mathbf{a})\,\chi^2_m$ for any fixed $\mathbf{a} \neq \mathbf{0}$.
+\end{itemize}
+
+\subsection*{LLN and CLT}
+\begin{itemize}[itemsep=5pt]
+  \item \textbf{LLN (weak).} $\bar{\mathbf{X}}_n \xrightarrow{P} \boldsymbol{\mu}$ as $n \to \infty$, for any iid distribution with finite mean and covariance. No Gaussianity required.
+  \item \textbf{LLN for covariance.} $\mathbf{S}_n \xrightarrow{P} \boldsymbol{\Sigma}$. Both estimators are \textbf{consistent}.
+  \item \textbf{CLT.} $\sqrt{n}(\bar{\mathbf{X}}_n - \boldsymbol{\mu}) \xrightarrow{d} N_p(\mathbf{0}, \boldsymbol{\Sigma})$ for any distribution with finite $\boldsymbol{\Sigma}$. The $\sqrt{n}$ rescaling is mandatory --- without it the error collapses to zero.
+  \item \textbf{Rate of convergence.} $\|\bar{\mathbf{X}}_n - \boldsymbol{\mu}\| \sim C/\sqrt{n}$. Halving error $\Rightarrow$ 4$\times$ data. Error$/10 \Rightarrow 100\times$ data.
+  \item \textbf{Exam rule.} ``Gaussian data'' $\Rightarrow$ use exact Wishart/$\chi^2$ results. ``Large sample'' or ``general distribution'' $\Rightarrow$ use CLT. Exact results are always stronger.
+  \item \textbf{The $n > p$ barrier.} If $n \leq p$, $\mathbf{S}$ is singular: you cannot compute $\mathbf{S}^{-1}$, and all classical tests break down. In practice $n \gg p$ is required.
+  \item \textbf{Why is the Gaussian universal?} Not because data is Gaussian, but because the CLT forces \textit{averages of anything} toward Gaussian. It is the universal attractor of sums.
+\end{itemize}
+
+\subsection*{The Complete Scalar--Matrix Analogy (memorise this table)}
+\renewcommand{\arraystretch}{1.4}
+\begin{center}
+\begin{tabular}{ll}
+\hline
+\textbf{Scalar ($p=1$)} & \textbf{Matrix ($p \geq 2$)} \\
+\hline
+$X_i \sim N(\mu, \sigma^2)$ & $X_i \sim N_p(\boldsymbol{\mu}, \boldsymbol{\Sigma})$ \\
+$\bar{X} \sim N(\mu,\, \sigma^2/n)$ & $\bar{\mathbf{X}} \sim N_p(\boldsymbol{\mu},\, \boldsymbol{\Sigma}/n)$ \\
+$(n-1)S^2/\sigma^2 \sim \chi^2_{n-1}$ & $(n-1)\mathbf{S} \sim W_p(n-1, \boldsymbol{\Sigma})$ \\
+$\bar{X}$ and $S^2$ independent & $\bar{\mathbf{X}}$ and $\mathbf{S}$ independent \\
+$z$-test / $t$-test & Hotelling's $T^2$ \\
+$\chi^2_m = \sum_{j=1}^m Z_j^2$ & $W_p(m,\boldsymbol{\Sigma}) = \sum_{j=1}^m Z_j Z_j^\top$ \\
+\hline
+\end{tabular}
+\end{center}
+
+
+\end{document}

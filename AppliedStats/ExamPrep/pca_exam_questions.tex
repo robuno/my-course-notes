@@ -1,0 +1,264 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage{booktabs}
+\usepackage{parskip}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{truegreen}{RGB}{39, 80, 10}
+\definecolor{truebg}{RGB}{234, 243, 222}
+\definecolor{falsered}{RGB}{121, 31, 31}
+\definecolor{falsebg}{RGB}{252, 235, 235}
+\definecolor{notebg}{RGB}{230, 241, 251}
+\definecolor{noteborder}{RGB}{24, 95, 165}
+\definecolor{headergray}{RGB}{60, 60, 60}
+
+\titleformat{\section}{\large\bfseries\color{headergray}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{Q\thesubsection.}{0.5em}{}
+
+\newcommand{\truelabel}{\textcolor{white}{\colorbox{truegreen}{\textbf{TRUE}}}}
+\newcommand{\falselabel}{\textcolor{white}{\colorbox{falsered}{\textbf{FALSE}}}}
+
+\newenvironment{statement}[1]{%
+  \par\medskip
+  \noindent #1\par\smallskip
+  \noindent
+}{\par}
+
+\newenvironment{explanation}{%
+  \noindent\small\color{headergray}\textit{Explanation: }%
+}{\par}
+
+\newenvironment{notebox}{%
+  \begin{mdframed}[backgroundcolor=notebg, linecolor=noteborder, linewidth=1.5pt, leftline=true, rightline=false, topline=false, bottomline=false, innerleftmargin=10pt, innerrightmargin=10pt, innertopmargin=8pt, innerbottommargin=8pt]
+}{\end{mdframed}}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Principal Component Analysis (PCA)}}\\[0.4em]
+  {\large Exam Questions --- Answers \& Explanations}\\[0.2em]
+  \textcolor{gray}{\small True/False with reasoning}
+\end{center}
+
+\vspace{1em}
+
+\begin{notebox}
+\textbf{Key Rules to Memorize}
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{Eigenvalues are always $\geq 0$.} Covariance matrices are positive semi-definite, so all eigenvalues are non-negative real numbers with no upper bound.
+  \item \textbf{Sum of eigenvalues = total variance (trace), not generalised variance.} The generalised variance is the \textit{determinant} of the covariance matrix --- a completely different quantity.
+  \item \textbf{Standardizing $\equiv$ using the correlation matrix.} Standardizing each variable to unit variance transforms the covariance matrix into the correlation matrix, so PCA on standardized data is identical to PCA on the correlation matrix.
+  \item \textbf{Standardizing does not make eigenvalues equal.} It removes scale differences, but if variables are correlated, eigenvalues will still differ. Equal eigenvalues only arise when all variables are completely uncorrelated.
+  \item \textbf{Total variance of standardized $p$-dimensional data $= p$.} Each standardized variable has variance 1, so the total is $p$, not 1.
+  \item \textbf{PC scores are linear combinations of the original variables.} A score for PC$_i$ is $\mathbf{x}^\top \mathbf{w}_i$, a weighted sum of the original variables.
+  \item \textbf{PCs are ordered by variance explained.} By construction, PC$_1$ captures the most variance, then PC$_2$, and so on: $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_p \geq 0$.
+  \item \textbf{Eigenvectors of a covariance matrix are orthonormal.} A covariance matrix is symmetric, so its eigenvectors are orthogonal; after normalizing to unit length they form an orthonormal basis.
+\end{itemize}
+\end{notebox}
+
+\vspace{1em}
+
+%--------------------------------------------------------------
+\section{Questions \& Answers}
+%--------------------------------------------------------------
+
+\subsection{PCA on a dataset with $p$ variables}
+
+\textit{Which of the following statements are true?}
+
+\bigskip
+
+\begin{statement}{\truelabel\quad The first PC explains a proportion of total variance $\geq$ that of any of the $p$ original variables.}
+\begin{explanation}
+PC$_1$ is constructed to \emph{maximise} explained variance. In the standardized case each variable explains exactly $1/p$ of the total, whereas PC$_1$ always captures at least that much (and typically much more).
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\truelabel\quad The first PC explains a proportion of total variance $\geq$ that of any other principal component.}
+\begin{explanation}
+By definition, PCs are ranked in descending order of variance: $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_p$. So PC$_1$ always leads.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\truelabel\quad If variables are standardized (mean 0, variance 1), they all contribute equally to total variance.}
+\begin{explanation}
+Standardizing sets each variable's variance to 1. The total variance equals $p$, and every variable contributes exactly $1/p$ of it --- equal contributions by construction.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad The sum of eigenvalues of the covariance matrix equals the generalised variance.}
+\begin{explanation}
+The sum of eigenvalues equals the \textbf{total variance} (the trace of the covariance matrix). The \textbf{generalised variance} is the \emph{determinant} of the covariance matrix --- a fundamentally different quantity.
+\end{explanation}
+\end{statement}
+
+%--------------------------------------------------------------
+\subsection{Typical range of eigenvalue values in PCA}
+
+\textit{What is the typical range of values for eigenvalues in PCA?}
+
+\bigskip
+
+\begin{statement}{\falselabel\quad Non-negative real numbers, multiples of the variance.}
+\begin{explanation}
+Eigenvalues are non-negative real numbers, but there is no requirement that they be multiples of any specific variance value.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad Integers.}
+\begin{explanation}
+Eigenvalues are generally continuous real numbers. Nothing in the mathematics forces them to be whole numbers.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\truelabel\quad Non-negative real numbers.}
+\begin{explanation}
+Covariance matrices are positive semi-definite, which guarantees $\lambda_i \geq 0$ for all $i$. Eigenvalues can take any non-negative real value.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad Real numbers between 0 and 1.}
+\begin{explanation}
+Eigenvalues have no upper bound of 1. For example, if a variable has very high variance, its associated eigenvalue could be 5, 100, or any large positive number.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad Real numbers (including negative).}
+\begin{explanation}
+Eigenvalues of a covariance matrix cannot be negative. The matrix is positive semi-definite by construction, ruling out negative eigenvalues.
+\end{explanation}
+\end{statement}
+
+%--------------------------------------------------------------
+\subsection{About PCA --- variance and eigenvalues}
+
+\textit{Which of the following are true?}
+
+\bigskip
+
+\begin{statement}{\truelabel\quad Total variance is distributed among PCs proportionally to the eigenvalues of the covariance matrix.}
+\begin{explanation}
+The variance of PC$_i$ equals its eigenvalue $\lambda_i$. The proportion of variance it explains is $\lambda_i / \sum_j \lambda_j$, so eigenvalues directly determine the distribution of total variance.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad Total variance is distributed proportionally to the number of strictly positive loadings.}
+\begin{explanation}
+The distribution of variance depends entirely on eigenvalues, not on how many loadings happen to be positive. The sign and count of positive loadings carry no information about variance proportions.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad The eigenvalues of the covariance matrix can never all be equal.}
+\begin{explanation}
+If all $p$ variables are mutually uncorrelated and have the same variance $\sigma^2$, the covariance matrix is $\sigma^2 \mathbf{I}$ and all eigenvalues equal $\sigma^2$. Equal eigenvalues are uncommon but perfectly valid.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad If variables are standardized, the eigenvalues of their sample covariance matrix are all the same.}
+\begin{explanation}
+Standardizing removes scale differences but leaves the correlation structure intact. If variables are correlated, the eigenvalues will still be unequal. Equal eigenvalues require zero correlation among all variables.
+\end{explanation}
+\end{statement}
+
+%--------------------------------------------------------------
+\subsection{General properties of PCA}
+
+\textit{Which statements are true regarding PCA?}
+
+\bigskip
+
+\begin{statement}{\truelabel\quad PCA provides uncorrelated linear combinations of the original variables.}
+\begin{explanation}
+Principal components are constructed to be mutually orthogonal (and hence uncorrelated). This is one of PCA's defining properties.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad Standardizing before PCA ensures that all eigenvalues are equal.}
+\begin{explanation}
+Standardizing changes the scale but not the correlation structure. Correlated variables produce unequal eigenvalues regardless of whether data were standardized first.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\truelabel\quad The total variance explained by the first $k$ PCs equals the sum of the $k$ largest eigenvalues.}
+\begin{explanation}
+Since the variance of PC$_i$ is exactly $\lambda_i$, the cumulative variance of the top $k$ components is $\sum_{i=1}^{k} \lambda_i$.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\truelabel\quad The eigenvectors of the sample covariance matrix form an orthonormal basis.}
+\begin{explanation}
+A covariance matrix is real and symmetric. The spectral theorem guarantees that such matrices have orthogonal eigenvectors. Normalizing them to unit length produces an orthonormal basis for $\mathbb{R}^p$.
+\end{explanation}
+\end{statement}
+
+%--------------------------------------------------------------
+\subsection{Scaling before PCA}
+
+\textit{Which statements are correct regarding scaling before PCA?}
+
+\bigskip
+
+\begin{statement}{\truelabel\quad Without scaling, variables with large variance dominate the first PCs.}
+\begin{explanation}
+PCA maximises variance, so a variable expressed in millimetres (large numerical values) will overwhelm one expressed in kilometres. Scaling levels the playing field so all variables compete fairly.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\truelabel\quad Centering without scaling is appropriate if variables are on the same scale.}
+\begin{explanation}
+When all variables share the same units and comparable magnitudes, centering (subtracting the mean) is sufficient. Full standardization would discard meaningful differences in spread.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\truelabel\quad Standardizing is equivalent to applying PCA to the correlation matrix.}
+\begin{explanation}
+Standardizing each variable to unit variance converts the covariance matrix into the correlation matrix (since $\text{Cor}(X_i, X_j) = \text{Cov}(X_i/\sigma_i,\, X_j/\sigma_j)$). PCA on standardized data is therefore identical to PCA on the correlation matrix.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad PCA is unaffected by whether data are scaled or not.}
+\begin{explanation}
+Scaling fundamentally changes the analysis. Different scales produce a different covariance matrix, which yields different eigenvectors (principal components) and different eigenvalues (variance proportions).
+\end{explanation}
+\end{statement}
+
+%--------------------------------------------------------------
+\subsection{PCA on standardized 10-dimensional data}
+
+\textit{Which of the following statements are true?}
+
+\bigskip
+
+\begin{statement}{\falselabel\quad The first PC corresponds to the direction of maximum correlation.}
+\begin{explanation}
+PC$_1$ is the direction of \textbf{maximum variance}, not maximum correlation. Correlation measures the linear relationship between two variables and is not equivalent to a direction in the principal component space.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad The loadings matrix is symmetrical.}
+\begin{explanation}
+The loadings matrix ($p \times p$) contains eigenvectors as its columns. In general it is \emph{not} symmetric. The covariance matrix is symmetric, but the matrix of its eigenvectors typically is not.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\truelabel\quad The scores are linear combinations of the original variables.}
+\begin{explanation}
+The score for PC$_i$ is computed as $\mathbf{x}^\top \mathbf{w}_i$, which is a weighted sum (linear combination) of the original $p$ variables, with the loading vector $\mathbf{w}_i$ providing the weights.
+\end{explanation}
+\end{statement}
+
+\begin{statement}{\falselabel\quad The total variance is equal to 1.}
+\begin{explanation}
+With 10 standardized variables, each has variance 1. The total variance is therefore $10 = p$, not 1. In general, total variance after standardization equals the number of variables $p$.
+\end{explanation}
+\end{statement}
+
+\end{document}
